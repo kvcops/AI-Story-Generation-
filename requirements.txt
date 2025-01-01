@@ -1,5 +1,6 @@
 Flask==3.0.0
 google-generativeai==0.3.2
-xhtml2pdf==0.2.8
+reportlab==3.6.12
+xhtml2pdf==0.2b2
 python-dotenv==1.0.0
 requests==2.31.0
