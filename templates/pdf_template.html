@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ story.title }}</title>
+    <style>
+        @page {
+            margin: 2.5cm 2cm;
+            size: A4;
+        }
+        
+        body {
+            font-family: Times, 'Times New Roman', serif;
+            background-color: #ffffff;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        /* Cover Page */
+        .cover-page {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 40px;
+            page-break-after: always;
+        }
+
+        .cover-image {
+            width: 100%;
+            max-height: 600px;
+            margin-bottom: 30px;
+        }
+
+        .cover-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2a1b3d;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .cover-author {
+            font-size: 18px;
+            color: #666666;
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        /* Chapter Styling */
+        .chapter {
+            margin: 0 auto;
+            padding: 20px;
+            page-break-before: always;
+        }
+
+        .chapter-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .chapter-number {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .chapter-title {
+            font-size: 24px;
+            color: #2a1b3d;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .chapter-image {
+            width: 100%;
+            max-height: 400px;
+            margin: 20px 0;
+            display: block;
+        }
+
+        .chapter-content {
+            margin: 0 auto;
+            text-align: justify;
+            font-size: 12pt;
+            line-height: 1.6;
+        }
+
+        .chapter-content p {
+            margin-bottom: 15px;
+            text-indent: 20px;
+        }
+
+        .chapter-content p:first-letter {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2a1b3d;
+        }
+
+        /* Page Numbers */
+        .page-number {
+            font-size: 10pt;
+            color: #666666;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Decorative Elements */
+        .chapter-divider {
+            text-align: center;
+            margin: 30px 0;
+            color: #2a1b3d;
+        }
+
+        .chapter-divider::before {
+            content: "* * *";
+            font-size: 20px;
+            letter-spacing: 10px;
+        }
+
+        /* Print Specific */
+        @media print {
+            body {
+                font-size: 12pt;
+            }
+            
+            .chapter {
+                page-break-before: always;
+            }
+            
+            .cover-page {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-page">
+        <img class="cover-image" src="{{ cover_image }}" alt="Book Cover">
+        <h1 class="cover-title">{{ story.title }}</h1>
+        <p class="cover-author">By {{ story.author }}</p>
+    </div>
+
+    {% for chapter in story.chapters %}
+    <div class="chapter">
+        <div class="chapter-header">
+            <div class="chapter-number">Chapter {{ chapter.chapter_number }}</div>
+            <h2 class="chapter-title">{{ chapter.chapter_title }}</h2>
+        </div>
+        
+        <img class="chapter-image" src="{{ chapter.image }}" alt="Chapter {{ chapter.chapter_number }} Image">
+        
+        <div class="chapter-content">
+            {% for paragraph in chapter.content.split('\n') if paragraph.strip() %}
+            <p>{{ paragraph }}</p>
+            {% endfor %}
+        </div>
+        
+        {% if not loop.last %}
+        <div class="chapter-divider"></div>
+        {% endif %}
+        
+        <div class="page-number">{{ loop.index * 2 }}</div>
+    </div>
+    {% endfor %}
+</body>
+</html>
