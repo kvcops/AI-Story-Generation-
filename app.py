@@ -11,7 +11,13 @@ import re
 
 app = Flask(__name__)
 executor = ThreadPoolExecutor(max_workers=10)
-
+from google.generativeai.types import GenerationConfig, HarmCategory, HarmBlockThreshold
+safety_settings = {
+    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+}
 # --- Configuration ---
 # Attempt to get API keys from environment variables,
 # which is a best practice for security and Vercel deployment.
@@ -20,7 +26,7 @@ responsive_voice_key = os.environ.get("RESPONSIVE_VOICE_KEY")
 if not api_key or not responsive_voice_key:
     raise ValueError("API keys not found. Please set 'API_KEY' and 'RESPONSIVE_VOICE_KEY' environment variables.")
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.0-flash-exp',safety_settings=safety_settings)
 
 # --- Helper Functions ---
 def generate_image(prompt, width=800, height=600):
